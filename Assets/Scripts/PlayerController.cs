@@ -56,6 +56,11 @@ public class PlayerController : MonoBehaviour
     public float AimSensitivity = .6f;
     public bool IsAiming = false;
 
+    [Header("Gun")]
+    public GameObject arrow;
+    public Transform arrowBone;
+    public GameObject arrowPrefab;
+
 
     // cinemachine
     private float cinemachineTargetYaw;
@@ -270,8 +275,16 @@ public class PlayerController : MonoBehaviour
                 currentVelocity: ref rotationVelocity,
                 smoothTime: RotationSmoothTime);
 
-            // rotate to face input direction relative to camera position
-            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            if (IsAiming)
+            {
+                // face the way the camera is facing
+                transform.rotation = Quaternion.Euler(0.0f, mainCamera.transform.eulerAngles.y, 0.0f);
+            }
+            else
+            {
+                // rotate to face input direction relative to camera position
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            }
         }
 
         // move the player
@@ -311,12 +324,14 @@ public class PlayerController : MonoBehaviour
         if (aimAction.IsPressed())
         {
             aimCamera.SetActive(true);
+            followCamera.SetActive(false);
 
             // allow time for the cam to blend before enabling the ui
             StartCoroutine(ShowReticle());
         }
         else
         {
+            followCamera.SetActive(true);
             aimCamera.SetActive(false);
 
             if (aimReticle != null)
@@ -349,6 +364,17 @@ public class PlayerController : MonoBehaviour
         }
 
         return Mathf.Clamp(lfAngle, lfMin, lfMax);
+    }
+
+    IEnumerator FireArrow()
+    {
+        GameObject projectile = Instantiate(arrowPrefab);
+        //projectile.transform.forward = look.transform.forward;
+        //projectile.transform.position = fireTransform.position + fireTransform.forward;
+        //Wait for the position to update
+        yield return new WaitForSeconds(0.1f);
+
+        projectile.GetComponent<Projectile>().Fire();
     }
 
 
