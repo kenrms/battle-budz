@@ -163,7 +163,6 @@ public class PlayerController : MonoBehaviour
             // Jump
             if (jumpAction.IsPressed() && jumpTimeoutDelta <= 0.0f)
             {
-                Debug.Log("Jump");
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
             }
@@ -199,10 +198,16 @@ public class PlayerController : MonoBehaviour
     private void GroundedCheck()
     {
         // set sphere position, with offset
-        Vector3 spherePosition =
-            new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+        var spherePosition = new Vector3(
+            x: transform.position.x,
+            y: transform.position.y - GroundedOffset,
+            z: transform.position.z);
 
-        IsGrounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+        IsGrounded = Physics.CheckSphere(
+            position: spherePosition,
+            radius: GroundedRadius,
+            layerMask: GroundLayers,
+            queryTriggerInteraction: QueryTriggerInteraction.Ignore);
     }
 
     private void Move()
