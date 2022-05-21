@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -43,6 +44,12 @@ public class PlayerController : MonoBehaviour
     public float TopClamp = 70.0f;
     [Tooltip("How far in degrees can you move the camera down")]
     public float BottomClamp = -30.0f;
+    public GameObject followCamera;
+    public GameObject aimCamera;
+
+    [Header("Aiming")]
+    public GameObject aimReticle;
+    public float aimBlendTime = .25f;
 
     [Header("Sensitivity")]
     public float LookSensitivity = 1f;
@@ -109,6 +116,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        HandleAiming();
         AimCheck();
         JumpAndGravity();
         GroundedCheck();
@@ -296,6 +304,36 @@ public class PlayerController : MonoBehaviour
             x: cinemachineTargetPitch,
             y: cinemachineTargetYaw,
             z: 0.0f);
+    }
+
+    private void HandleAiming()
+    {
+        if (aimAction.IsPressed())
+        {
+            aimCamera.SetActive(true);
+
+            // allow time for the cam to blend before enabling the ui
+            StartCoroutine(ShowReticle());
+        }
+        else
+        {
+            aimCamera.SetActive(false);
+
+            if (aimReticle != null)
+            {
+                aimReticle.SetActive(false);
+            }
+        }
+    }
+
+    IEnumerator ShowReticle()
+    {
+        yield return new WaitForSeconds(aimBlendTime);
+
+        if (aimReticle != null)
+        {
+            aimReticle.SetActive(enabled);
+        }
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
