@@ -1,37 +1,44 @@
 using Cinemachine;
-using System.Collections;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public Rigidbody rigidbody;
-    CinemachineImpulseSource impulseSource;
+    public GameObject HitDecal;
+    public float Speed;
+    public float TimeToDestroy = 3f;
+    public CinemachineImpulseSource impulseSource;
+    public Vector3 Target { get; set; }
+    public bool hit { get; set; }
 
-    private void Awake()
+    private void OnEnable()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        rigidbody.centerOfMass = transform.position;
-    }
-
-    public void Fire()
-    {
-        rigidbody.AddForce(transform.forward * (100 * Random.Range(1.3f, 1.7f)), ForceMode.Impulse);
-        impulseSource = GetComponent<Cinemachine.CinemachineImpulseSource>();
+        impulseSource = GetComponent<CinemachineImpulseSource>();
         impulseSource.GenerateImpulse(Camera.main.transform.forward);
+        Destroy(gameObject, TimeToDestroy);
     }
 
-    public void OnCollisionEnter(Collision collision)
+    private void Update()
     {
-        if (collision.gameObject.name != "Player")
+        transform.position = Vector3.MoveTowards(
+            current: transform.position,
+            target: Target,
+            maxDistanceDelta: Speed * Time.deltaTime);
+
+        if (!hit && Vector3.Distance(transform.position, Target) < .01f)
         {
-            rigidbody.isKinematic = true;
-            StartCoroutine(Countdown());
+            Destroy(gameObject);
         }
     }
 
-    IEnumerator Countdown()
+    private void OnCollisionEnter(Collision collision)
     {
-        yield return new WaitForSeconds(10);
+        var contact = collision.GetContact(0);
+
+        Instantiate(
+            original: HitDecal,
+            position: contact.point + contact.normal * .0001f,
+            rotation: Quaternion.LookRotation(contact.normal));
+
         Destroy(gameObject);
     }
 }
