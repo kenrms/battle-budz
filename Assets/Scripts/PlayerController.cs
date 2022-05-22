@@ -16,6 +16,11 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Acceleration and deceleration")]
     public float SpeedChangeRate = 10.0f;
 
+    [Header("Health")]
+    public bool IsAlive = true;
+    public int MaxHealth = 100;
+    public int CurrentHealth = 100;
+
     [Space(10)]
     [Tooltip("The height the player can jump")]
     public float JumpHeight = 1.2f;
@@ -59,6 +64,9 @@ public class PlayerController : MonoBehaviour
     public GameObject BulletPrefab;
     public float BulletMissDespawnDistance = 25;
 
+    // events
+    public delegate void DamageHandler();
+    public event DamageHandler OnDamage;
 
     // cinemachine
     private float cinemachineTargetYaw;
@@ -109,6 +117,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
+        CurrentHealth = MaxHealth;
         InitializeActions();
 
         // reset our timeouts on start
@@ -141,6 +150,21 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawSphere(
             center: new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
             radius: GroundedRadius);
+    }
+
+    public void TakeDamage(int dmg)
+    {
+        if (IsAlive)
+        {
+            CurrentHealth -= dmg;
+            OnDamage.Invoke();
+
+            if (CurrentHealth <= 0)
+            {
+                CurrentHealth = 0;
+                IsAlive = false;
+            }
+        }
     }
 
     private void InitializeActions()
