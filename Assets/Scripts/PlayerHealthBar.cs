@@ -9,6 +9,11 @@ public class PlayerHealthBar : UIBar
         Player.OnDamage += UpdateHealthBar;
     }
 
+    private void OnDisable()
+    {
+        Player.OnDamage -= UpdateHealthBar;
+    }
+
     private void UpdateHealthBar()
     {
         float healthPercent = (float)Player.CurrentHealth / Player.MaxHealth;

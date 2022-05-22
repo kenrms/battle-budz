@@ -125,7 +125,6 @@ public class PlayerController : MonoBehaviour
         fallTimeoutDelta = FallTimeout;
     }
 
-
     private void Update()
     {
         HandleAiming();
@@ -152,12 +151,18 @@ public class PlayerController : MonoBehaviour
             radius: GroundedRadius);
     }
 
+    private void OnDisable()
+    {
+        shootAction.performed -= ShootGun;
+    }
+
     public void TakeDamage(int dmg)
     {
         if (IsAlive)
         {
             CurrentHealth -= dmg;
             OnDamage.Invoke();
+            // TODO some feedback (red, flashing, idk)
 
             if (CurrentHealth <= 0)
             {
@@ -193,13 +198,13 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out hit, Mathf.Infinity))
         {
             projectile.Target = hit.point;
-            projectile.hit = true;
+            projectile.IsHit = true;
         }
         else
         {
             var cameraTransform = mainCamera.transform;
             projectile.Target = cameraTransform.position + cameraTransform.forward * BulletMissDespawnDistance;
-            projectile.hit = false;
+            projectile.IsHit = false;
         }
     }
 

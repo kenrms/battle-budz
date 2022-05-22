@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 479186353}
   m_Layer: 3
   m_Name: Weapon
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 708389695}
   m_Layer: 3
   m_Name: backpack
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +125,7 @@ BoxCollider:
   m_GameObject: {fileID: 708389693}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 387081818048134149}
   m_Layer: 3
   m_Name: Mesh
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -398,6 +398,9 @@ MonoBehaviour:
   SprintSpeed: 7
   RotationSmoothTime: 0
   SpeedChangeRate: 10
+  IsAlive: 1
+  MaxHealth: 100
+  CurrentHealth: 100
   JumpHeight: 1.2
   Gravity: -15
   JumpTimeout: 0.3
@@ -413,12 +416,13 @@ MonoBehaviour:
   BottomClamp: -90
   followCamera: {fileID: 0}
   aimCamera: {fileID: 0}
-  aimReticle: {fileID: 0}
-  aimBlendTime: 0.25
   LookSensitivity: 1
   AimSensitivity: 0.6
   IsAiming: 0
-  BulletSpawnPoint: {fileID: 0}
+  BulletParent: {fileID: 0}
+  BulletSpawnPoint: {fileID: 1014481536}
+  BulletPrefab: {fileID: 9315747782177606, guid: 6c10f110f73feb64eb3d29bcc169d1cd, type: 3}
+  BulletMissDespawnDistance: 25
   cursorLocked: 1
   cursorInputForLook: 1
 --- !u!143 &387081818328389599
@@ -453,7 +457,7 @@ GameObject:
   - component: {fileID: 4009263334783496674}
   m_Layer: 3
   m_Name: Eyes
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -532,7 +536,7 @@ BoxCollider:
   m_GameObject: {fileID: 6118149319359634771}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
