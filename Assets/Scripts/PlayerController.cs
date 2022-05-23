@@ -67,7 +67,7 @@ public class PlayerController : Actor
     private float speed;
     private float targetRotation = 0.0f;
     private float rotationVelocity;
-    private float verticalVelocity;
+    public float verticalVelocity;
     private float terminalVelocity = 53.0f;
 
     // timeout deltatime

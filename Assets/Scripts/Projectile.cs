@@ -6,14 +6,11 @@ public class Projectile : MonoBehaviour
     public GameObject HitDecal;
     public float Speed;
     public float TimeToDestroy = 3f;
-    public CinemachineImpulseSource ImpulseSource;
     public Vector3 Target { get; set; }
     public bool IsHit { get; set; }
 
     private void OnEnable()
     {
-        ImpulseSource = GetComponent<CinemachineImpulseSource>();
-        ImpulseSource.GenerateImpulse(Camera.main.transform.forward);
         Destroy(gameObject, TimeToDestroy);
     }
 
