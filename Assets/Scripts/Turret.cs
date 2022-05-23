@@ -27,7 +27,6 @@ public class Turret : MonoBehaviour
 
     private void Shoot()
     {
-
         GameObject bullet = Instantiate(
             original: BulletPrefab,
             position: BulletSpawnPoint.position,

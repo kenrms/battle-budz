@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Actor
 {
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
@@ -15,11 +15,6 @@ public class PlayerController : MonoBehaviour
     public float RotationSmoothTime = 0.12f;
     [Tooltip("Acceleration and deceleration")]
     public float SpeedChangeRate = 10.0f;
-
-    [Header("Health")]
-    public bool IsAlive = true;
-    public int MaxHealth = 100;
-    public int CurrentHealth = 100;
 
     [Space(10)]
     [Tooltip("The height the player can jump")]
@@ -63,10 +58,6 @@ public class PlayerController : MonoBehaviour
     public Transform BulletSpawnPoint;
     public GameObject BulletPrefab;
     public float BulletMissDespawnDistance = 25;
-
-    // events
-    public delegate void DamageHandler();
-    public event DamageHandler OnDamage;
 
     // cinemachine
     private float cinemachineTargetYaw;
@@ -117,10 +108,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         playerInput = GetComponent<PlayerInput>();
-        CurrentHealth = MaxHealth;
         InitializeActions();
-
-        // reset our timeouts on start
         jumpTimeoutDelta = JumpTimeout;
         fallTimeoutDelta = FallTimeout;
     }
@@ -154,22 +142,6 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         shootAction.performed -= ShootGun;
-    }
-
-    public void TakeDamage(int dmg)
-    {
-        if (IsAlive)
-        {
-            CurrentHealth -= dmg;
-            OnDamage.Invoke();
-            // TODO some feedback (red, flashing, idk)
-
-            if (CurrentHealth <= 0)
-            {
-                CurrentHealth = 0;
-                IsAlive = false;
-            }
-        }
     }
 
     private void InitializeActions()

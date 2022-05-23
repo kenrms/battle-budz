@@ -6,6 +6,7 @@ public class UIBar : MonoBehaviour
 {
     public TextMeshProUGUI TextMesh;
     public Image FillBar;
+    public bool IsShowingText;
 
     [Range(0f, 1f)]
     private float barPercent;
@@ -18,6 +19,10 @@ public class UIBar : MonoBehaviour
     private void OnGUI()
     {
         FillBar.fillAmount = barPercent;
-        TextMesh.text = $"{barPercent * 100f}%";
+
+        if (IsShowingText)
+        {
+            TextMesh.text = $"{barPercent * 100f:0}%";
+        }
     }
 }

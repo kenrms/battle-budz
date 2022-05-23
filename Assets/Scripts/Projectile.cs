@@ -32,13 +32,14 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Destroy(gameObject);
         var contact = collision.GetContact(0);
 
-        if (collision.transform.CompareTag("Player"))
+        if (collision.transform.CompareTag("Actor"))
         {
             // make player take dmg
-            var player = collision.gameObject.GetComponentInParent<PlayerController>();
-            player.TakeDamage(10);
+            var actor = collision.gameObject.GetComponentInParent<Actor>();
+            actor.TakeDamage(10);
         }
         else if (collision.transform.CompareTag("Environment"))
         {
@@ -47,7 +48,5 @@ public class Projectile : MonoBehaviour
                 position: contact.point + contact.normal * .0001f,
                 rotation: Quaternion.LookRotation(contact.normal));
         }
-
-        Destroy(gameObject);
     }
 }
